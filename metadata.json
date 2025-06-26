@@ -1,0 +1,6 @@
+{
+  "name": "LinkedIn Liker Insights Extension",
+  "description": "A Chrome extension to analyze LinkedIn profiles of post likers. Profile data is manually entered or can be provided by future content scripts.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

@@ -269,7 +269,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
               {sortedLikers.map((profile, index) => (
                 <tr 
                   key={profile.id} 
-                  className={`group hover:bg-gray-50 transition-colors duration-200 ${
+                  className={`group hover:bg-gray-100 transition-colors duration-200 ${
                     index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                   }`}
                 >

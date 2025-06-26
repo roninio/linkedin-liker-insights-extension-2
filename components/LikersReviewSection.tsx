@@ -42,8 +42,8 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
 
   if (likers.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+      <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-6">
           <svg style={{width: '24px', height: '24px'}} className="text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
@@ -159,17 +159,17 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
   return (
     <div className="space-y-6">
       {/* Header with stats */}
-      <div className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-4 shadow-sm">
+      <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3">
-              <div className="w-5 h-5 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
+              <div className="w-5 h-5 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg style={{width: '16px', height: '16px'}} className="text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
               LinkedIn Profiles
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+              <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                 {likers.length}
               </span>
             </h3>
@@ -181,7 +181,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
       </div>
 
       {/* Enhanced Profile Analysis */}
-      <div className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-4 shadow-sm">
+      <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h4 className="font-semibold text-gray-800 mb-1">Enhanced Analysis</h4>
@@ -191,7 +191,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
             <button
               onClick={handleAnalyzeProfiles}
               disabled={analyzingProfiles || likers.length === 0}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-purple-300 disabled:to-pink-300 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md disabled:hover:scale-100"
+              className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg disabled:hover:shadow-md"
             >
               {analyzingProfiles ? (
                 <>
@@ -212,12 +212,12 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
       </div>
 
       {/* Modern Table */}
-      <div className="bg-white/80 backdrop-blur-sm border border-white/60 rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
         <div className="overflow-auto">
           <table className="w-full min-w-[750px]">
             <thead>
-              <tr className="bg-gradient-to-r from-gray-50/80 to-blue-50/80 backdrop-blur-sm">
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider border-b border-gray-200/50">
+              <tr className="bg-gray-50">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider border-b border-gray-200">
                   <div className="flex items-center gap-2">
                     <div style={{width: '16px', height: '16px'}} className="bg-gray-100 rounded-md flex items-center justify-center">
                       <span className="text-xs font-bold text-gray-500">#</span>
@@ -226,7 +226,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-blue-100/50 transition-colors border-b border-gray-200/50"
+                  className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors border-b border-gray-200"
                   onClick={() => handleSort('name')}
                 >
                   <div className="flex items-center gap-2">
@@ -240,7 +240,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-blue-100/50 transition-colors border-b border-gray-200/50"
+                  className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors border-b border-gray-200"
                   onClick={() => handleSort('title')}
                 >
                   <div className="flex items-center gap-2">
@@ -253,7 +253,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
                     {getSortIcon('title')}
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider border-b border-gray-200/50">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider border-b border-gray-200">
                   <div className="flex items-center gap-2">
                     <div style={{width: '16px', height: '16px'}} className="bg-purple-100 rounded-md flex items-center justify-center">
                       <svg style={{width: '12px', height: '12px'}} className="text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,17 +265,17 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100/50">
+            <tbody className="divide-y divide-gray-100">
               {sortedLikers.map((profile, index) => (
                 <tr 
                   key={profile.id} 
-                  className={`group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 transition-all duration-200 ${
-                    index % 2 === 0 ? 'bg-white/50' : 'bg-gray-50/30'
+                  className={`group hover:bg-gray-50 transition-colors duration-200 ${
+                    index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                   }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <div style={{width: '20px', height: '20px'}} className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center group-hover:from-blue-100 group-hover:to-indigo-100 transition-colors">
+                      <div style={{width: '20px', height: '20px'}} className="bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
                         <span className="text-xs font-bold text-gray-600 group-hover:text-blue-600">
                           {index + 1}
                         </span>
@@ -310,7 +310,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
                       href={profile.profileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md"
+                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
                     >
                       <svg style={{width: '16px', height: '16px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -326,7 +326,7 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
       </div>
 
       {/* Export & Stats Section */}
-      <div className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-6 shadow-sm">
+      <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
             <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-lg px-4 py-2">

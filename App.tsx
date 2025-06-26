@@ -186,15 +186,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-none md:w-[800px] md:max-w-full bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <div className="w-full max-w-none md:w-[800px] md:max-w-full bg-white min-h-screen">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white p-6 shadow-lg">
+      <div className="bg-blue-600 text-white p-6 shadow-md">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold flex items-center gap-3">
-              <div className="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center">
-                💙
-              </div>
               LinkedIn Liker Insights
             </h1>
             <p className="text-blue-100 text-sm mt-2 font-medium">
@@ -202,7 +199,7 @@ const App: React.FC = () => {
             </p>
           </div>
           <button
-            className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 hover:scale-105"
+            className="bg-white/20 text-white hover:bg-white/30 rounded-md px-4 py-2 text-sm font-semibold transition-all duration-200 hover:scale-105"
             title="Open in new tab"
             onClick={() => window.open('index.html', '_blank')}
           >
@@ -219,16 +216,16 @@ const App: React.FC = () => {
       {/* Profile Details Modal */}
       {showProfileModal && selectedProfile && (
         <div 
-          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 animate-fade-in"
           onClick={closeProfileModal}
         >
           <div 
-            className="relative bg-gradient-to-br from-slate-50 to-blue-100 rounded-2xl shadow-2xl border border-blue-200/50 max-w-4xl w-full mx-auto max-h-[90vh] flex animate-slide-up"
+            className="relative bg-white rounded-lg shadow-lg max-w-4xl w-full mx-auto max-h-[90vh] flex animate-slide-up"
             onClick={e => e.stopPropagation()}
           >
             {/* Left Panel */}
-            <div className="w-[30%] bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-8 rounded-l-2xl flex flex-col items-center justify-center text-center">
-              <div className="w-28 h-28 rounded-full bg-white/20 flex items-center justify-center mb-4 border-4 border-white/30">
+            <div className="w-[30%] bg-blue-600 text-white p-8 rounded-l-lg flex flex-col items-center justify-center text-center">
+              <div className="w-28 h-28 rounded-full bg-blue-700 flex items-center justify-center mb-4">
                 <span className="text-6xl font-bold text-white">{selectedProfile.name.charAt(0)}</span>
               </div>
               <h2 className="text-2xl font-bold leading-tight">{selectedProfile.name}</h2>
@@ -237,7 +234,7 @@ const App: React.FC = () => {
                 href={selectedProfile.profileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200"
+                className="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-xs font-semibold transition-all duration-200"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                 View on LinkedIn
@@ -275,7 +272,7 @@ const App: React.FC = () => {
                     <ul className="space-y-4">
                       {selectedProfile.detailedInfo.experience.map((exp: any, idx: number) => (
                         <li key={idx} className="flex gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex-shrink-0 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg bg-blue-100 flex-shrink-0 flex items-center justify-center">
                             <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0v6l-3-2-3 2V6" /></svg>
                           </div>
                           <div>
@@ -304,12 +301,12 @@ const App: React.FC = () => {
       {!showProfileModal && (
         <div className="p-6 space-y-6">
           {/* Controls */}
-          <div className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-4 shadow-sm">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
             <div className="flex gap-3">
               <button
                 onClick={handleRetry}
                 disabled={loading}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-300 disabled:to-indigo-300 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:hover:scale-100"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg disabled:hover:shadow-md"
               >
                 <span className="flex items-center justify-center gap-2">
                   {loading ? (
@@ -327,7 +324,7 @@ const App: React.FC = () => {
               {(likers.length > 0 || error) && (
                 <button
                   onClick={handleClearData}
-                  className="bg-white/80 hover:bg-red-50 text-red-600 border border-red-200 hover:border-red-300 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md"
+                  className="bg-white hover:bg-red-50 text-red-600 border border-red-200 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   <span className="flex items-center gap-2">
                     Clear
@@ -338,7 +335,7 @@ const App: React.FC = () => {
           </div>
           {/* Status Messages */}
           {loading && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-sm">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
               <div className="flex items-center gap-3 text-blue-700">
                 <div style={{width: '16px', height: '16px'}} className="border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
                 <div>
@@ -349,7 +346,7 @@ const App: React.FC = () => {
             </div>
           )}
           {error && (
-            <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-4 shadow-sm">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 shadow-sm">
               <div className="flex items-start gap-3 text-red-700">
                 <div style={{width: '16px', height: '16px'}} className="bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <svg style={{width: '12px', height: '12px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -366,7 +363,7 @@ const App: React.FC = () => {
           {/* Results */}
           {likers.length > 0 && (
             <div className="space-y-4">
-              <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-xl p-4 shadow-sm">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 shadow-sm">
                 <div className="flex items-center gap-3 text-emerald-700">
                   <div style={{width: '16px', height: '16px'}} className="bg-emerald-100 rounded-full flex items-center justify-center">
                     <svg style={{width: '12px', height: '12px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,9 +395,9 @@ const App: React.FC = () => {
           )}
           {/* Instructions */}
           {!loading && !error && likers.length === 0 && (
-            <div className="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <div className="text-center">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg style={{width: '20px', height: '20px'}} className="text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -411,28 +408,15 @@ const App: React.FC = () => {
                 <p className="text-gray-600 mb-6">
                   Navigate to any LinkedIn post and click "Scan LinkedIn Post" to discover who engaged with it.
                 </p>
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 text-left">
-                  <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                    <span style={{width: '16px', height: '16px'}} className="bg-blue-100 rounded-full flex items-center justify-center text-xs">📋</span>
+                <div className="bg-blue-50 rounded-lg p-4 text-left">
+                  <h4 className="font-semibold text-gray-800 mb-3">
                     How to use:
                   </h4>
-                  <ol className="space-y-2 text-sm text-gray-700">
-                    <li className="flex items-start gap-3">
-                      <span style={{width: '16px', height: '16px'}} className="bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
-                      Navigate to a LinkedIn post with reactions
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span style={{width: '16px', height: '16px'}} className="bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
-                      Click "Scan LinkedIn Post" above
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span style={{width: '16px', height: '16px'}} className="bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
-                      Our AI will automatically scroll and gather all profile data
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span style={{width: '16px', height: '16px'}} className="bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
-                      Export or analyze the complete engagement data
-                    </li>
+                  <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                    <li>Navigate to a LinkedIn post with reactions</li>
+                    <li>Click "Scan LinkedIn Post" above</li>
+                    <li>Our AI will automatically scroll and gather all profile data</li>
+                    <li>Export or analyze the complete engagement data</li>
                   </ol>
                 </div>
               </div>

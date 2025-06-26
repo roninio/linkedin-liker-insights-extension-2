@@ -2,7 +2,15 @@ export interface LinkedInProfile {
   id: string;
   name: string;
   title: string;
-  profileUrl?: string; 
+  profileUrl?: string;
+  detailedInfo?: {
+    location?: string;
+    about?: string;
+    experience?: any[];
+    extractedAt?: string;
+    error?: boolean;
+    message?: string;
+  } | null;
 }
 
 // Message types for extension communication

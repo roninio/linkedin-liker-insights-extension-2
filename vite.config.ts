@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => {
             src: resolve(currentDir, 'icons', '*.png'),
             dest: 'icons',
           },
+          {
+            src: resolve(currentDir, 'popup.html'),
+            dest: '.',
+          },
+
         ],
       }),
     ],
@@ -32,11 +37,16 @@ export default defineConfig(({ mode }) => {
           popup: resolve(currentDir, 'index.html'),
           background: resolve(currentDir, 'background.ts'),
           content_script: resolve(currentDir, 'content_script.ts'),
+          popup_script: resolve(currentDir, 'popup.ts'),
         },
         output: {
           entryFileNames: (chunkInfo) => {
             if (chunkInfo.name === 'background' || chunkInfo.name === 'content_script') {
               return '[name].js';
+            }
+            // Handle popup script
+            if (chunkInfo.name === 'popup_script') {
+              return 'popup.js';
             }
             // For popup script, if the entry is index.tsx, Vite might name the output based on that.
             // Explicitly name it index.js for consistency with index.html's script tag.

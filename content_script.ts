@@ -220,7 +220,7 @@ async function collectAllProfilesWithScrolling(container: Element): Promise<Part
   let consecutiveNoNewProfiles = 0;
   let scrollAttempt = 0;
   const maxScrollAttempts = 50;
-  const maxConsecutiveNoNewProfiles = 3;
+  const maxConsecutiveNoNewProfiles = 1;
 
   logToPopup(`🚀 Starting profile collection with scrolling`);
 

@@ -10,20 +10,10 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
-  const [isPopupMode, setIsPopupMode] = useState(false);
-
-  // Detect if we're in popup mode or full tab mode
-  useEffect(() => {
-    const detectMode = () => {
-      // Check if window is small (likely popup) or large (likely tab)
-      const isSmallWindow = window.innerWidth <= 500;
-      setIsPopupMode(isSmallWindow);
-    };
-
-    detectMode();
-    window.addEventListener('resize', detectMode);
-    return () => window.removeEventListener('resize', detectMode);
-  }, []);
+  
+  // Modal state for popup
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<LinkedInProfile | null>(null);
 
   // Load likers from storage on mount
   useEffect(() => {
@@ -69,6 +59,27 @@ const App: React.FC = () => {
       }
     };
   }, []);
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showProfileModal) {
+        closeProfileModal();
+      }
+    };
+
+    if (showProfileModal) {
+      document.addEventListener('keydown', handleKeyDown);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      // Restore body scroll
+      document.body.style.overflow = 'unset';
+    };
+  }, [showProfileModal]);
 
   const handleScanLikers = async () => {
     try {
@@ -161,160 +172,245 @@ const App: React.FC = () => {
     chrome.storage?.local.remove([STORAGE_KEY]);
   };
 
+  // Modal open/close handlers for popup
+  const openProfileModal = (profile: LinkedInProfile) => {
+    console.log('🔍 openProfileModal called with profile:', profile);
+    setSelectedProfile(profile);
+    setShowProfileModal(true);
+    console.log('🔍 Modal should now be open');
+  };
+
+  const closeProfileModal = () => {
+    setShowProfileModal(false);
+    setSelectedProfile(null);
+  };
+
   return (
-    <div className={`w-full bg-gradient-to-br from-slate-50 to-blue-50 ${isPopupMode ? 'min-h-screen' : 'min-h-screen md:w-[800px] md:max-w-full'}`}>
+    <div className="w-full max-w-none md:w-[800px] md:max-w-full bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white shadow-lg">
-        <div className={`p-4 ${isPopupMode ? 'p-3' : 'p-6'}`}>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className={`font-bold flex items-center gap-2 ${isPopupMode ? 'text-lg' : 'text-xl'}`}>
-                <div className="w-4 h-4 bg-white/20 rounded-lg flex items-center justify-center">
-                  💙
-                </div>
-                {isPopupMode ? 'LinkedIn Insights' : 'LinkedIn Liker Insights'}
-              </h1>
-              <p className={`text-blue-100 font-medium mt-1 ${isPopupMode ? 'text-xs' : 'text-sm'}`}>
-                {isPopupMode ? 'AI-powered analytics' : 'Enhanced with AI-powered scrolling & analytics'}
-              </p>
-            </div>
-            {!isPopupMode && (
-              <button
-                className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 hover:scale-105"
-                title="Open in new tab"
-                onClick={() => window.open('index.html', '_blank')}
-              >
-                <span className="flex items-center gap-2">
-                  <svg style={{width: '16px', height: '16px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                  Open in Tab
-                </span>
-              </button>
-            )}
+      <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white p-6 shadow-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold flex items-center gap-3">
+              <div className="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center">
+                💙
+              </div>
+              LinkedIn Liker Insights
+            </h1>
+            <p className="text-blue-100 text-sm mt-2 font-medium">
+              Enhanced with AI-powered scrolling & analytics
+            </p>
           </div>
+          <button
+            className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 hover:scale-105"
+            title="Open in new tab"
+            onClick={() => window.open('index.html', '_blank')}
+          >
+            <span className="flex items-center gap-2">
+              <svg style={{width: '16px', height: '16px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Open in Tab
+            </span>
+          </button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className={`space-y-4 ${isPopupMode ? 'p-3' : 'p-6 space-y-6'}`}>
-        {/* Controls */}
-        <div className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-3 shadow-sm">
-          <div className={`flex gap-2 ${isPopupMode ? 'flex-col' : ''}`}>
-            <button
-              onClick={handleRetry}
-              disabled={loading}
-              className={`bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-300 disabled:to-indigo-300 text-white rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:hover:scale-100 ${isPopupMode ? 'py-2 px-4' : 'flex-1 py-3 px-6'}`}
-            >
-              <span className="flex items-center justify-center gap-2">
-                {loading ? (
-                  <>
-                    <div style={{width: '16px', height: '16px'}} className="border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    {isPopupMode ? 'Scanning...' : 'Scanning...'}
-                  </>
-                ) : (
-                  <>
-                    {isPopupMode ? 'Scan Post' : 'Scan LinkedIn Post'}
-                  </>
-                )}
-              </span>
-            </button>
-            
-            {(likers.length > 0 || error) && (
-              <button
-                onClick={handleClearData}
-                className={`bg-white/80 hover:bg-red-50 text-red-600 border border-red-200 hover:border-red-300 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md ${isPopupMode ? 'py-2 px-4' : 'py-3 px-4'}`}
+      {/* Profile Details Modal */}
+      {showProfileModal && selectedProfile && (
+        <div 
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in"
+          onClick={closeProfileModal}
+        >
+          <div 
+            className="relative bg-gradient-to-br from-slate-50 to-blue-100 rounded-2xl shadow-2xl border border-blue-200/50 max-w-4xl w-full mx-auto max-h-[90vh] flex animate-slide-up"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Left Panel */}
+            <div className="w-[30%] bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-8 rounded-l-2xl flex flex-col items-center justify-center text-center">
+              <div className="w-28 h-28 rounded-full bg-white/20 flex items-center justify-center mb-4 border-4 border-white/30">
+                <span className="text-6xl font-bold text-white">{selectedProfile.name.charAt(0)}</span>
+              </div>
+              <h2 className="text-2xl font-bold leading-tight">{selectedProfile.name}</h2>
+              <p className="text-sm text-blue-200 mt-1 mb-4">{selectedProfile.title || 'LinkedIn Profile'}</p>
+              <a
+                href={selectedProfile.profileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200"
               >
-                <span className="flex items-center gap-2">
-                  Clear
-                </span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                View on LinkedIn
+              </a>
+            </div>
+
+            {/* Right Panel */}
+            <div className="w-[70%] p-8 overflow-y-auto">
+              <button
+                onClick={closeProfileModal}
+                className="absolute top-4 right-4 text-gray-400 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-full w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-blue-100"
+                aria-label="Close profile details"
+              >
+                &times;
               </button>
-            )}
+              
+              <div className="space-y-6">
+                {selectedProfile.detailedInfo?.location && (
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Location</h3>
+                    <p className="text-gray-800">{selectedProfile.detailedInfo.location}</p>
+                  </div>
+                )}
+
+                {selectedProfile.detailedInfo?.about && (
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">About</h3>
+                    <p className="text-gray-800 leading-relaxed">{selectedProfile.detailedInfo.about}</p>
+                  </div>
+                )}
+
+                {selectedProfile.detailedInfo?.experience && selectedProfile.detailedInfo.experience.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Experience</h3>
+                    <ul className="space-y-4">
+                      {selectedProfile.detailedInfo.experience.map((exp: any, idx: number) => (
+                        <li key={idx} className="flex gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex-shrink-0 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0v6l-3-2-3 2V6" /></svg>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">{exp.title || 'Position'}</p>
+                            <p className="text-sm text-gray-600">{exp.company || 'Company'}</p>
+                            <p className="text-xs text-gray-500 mt-1">{exp.dates || 'Dates not specified'}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {!selectedProfile.detailedInfo && (
+                  <div className="text-center py-10">
+                    <p className="text-gray-600">No detailed information available for this profile.</p>
+                    <p className="text-sm text-gray-500 mt-2">Click "Analyze Profiles" to extract more details.</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Status Messages */}
-        {loading && (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3 shadow-sm">
-            <div className="flex items-center gap-3 text-blue-700">
-              <div style={{width: '16px', height: '16px'}} className="border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
-              <div>
-                <p className={`font-semibold ${isPopupMode ? 'text-sm' : ''}`}>Scanning LinkedIn profiles...</p>
-                <p className={`text-blue-600 mt-1 ${isPopupMode ? 'text-xs' : 'text-sm'}`}>Using enhanced AI-powered scrolling technology</p>
-              </div>
+      )}
+      {/* Main Content (hidden when profile details are shown) */}
+      {!showProfileModal && (
+        <div className="p-6 space-y-6">
+          {/* Controls */}
+          <div className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-4 shadow-sm">
+            <div className="flex gap-3">
+              <button
+                onClick={handleRetry}
+                disabled={loading}
+                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-300 disabled:to-indigo-300 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:hover:scale-100"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  {loading ? (
+                    <>
+                      <div style={{width: '16px', height: '16px'}} className="border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Scanning...
+                    </>
+                  ) : (
+                    <>
+                      Scan LinkedIn Post
+                    </>
+                  )}
+                </span>
+              </button>
+              {(likers.length > 0 || error) && (
+                <button
+                  onClick={handleClearData}
+                  className="bg-white/80 hover:bg-red-50 text-red-600 border border-red-200 hover:border-red-300 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md"
+                >
+                  <span className="flex items-center gap-2">
+                    Clear
+                  </span>
+                </button>
+              )}
             </div>
           </div>
-        )}
-
-        {error && (
-          <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-3 shadow-sm">
-            <div className="flex items-start gap-3 text-red-700">
-              <div style={{width: '16px', height: '16px'}} className="bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg style={{width: '12px', height: '12px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-              <div>
-                <p className={`font-semibold ${isPopupMode ? 'text-sm' : ''}`}>Error occurred</p>
-                <p className={`mt-1 ${isPopupMode ? 'text-xs' : 'text-sm'}`}>{error}</p>
+          {/* Status Messages */}
+          {loading && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-sm">
+              <div className="flex items-center gap-3 text-blue-700">
+                <div style={{width: '16px', height: '16px'}} className="border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
+                <div>
+                  <p className="font-semibold">Scanning LinkedIn profiles...</p>
+                  <p className="text-sm text-blue-600 mt-1">Using enhanced AI-powered scrolling technology</p>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Results */}
-        {likers.length > 0 && (
-          <div className="space-y-3">
-            <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-xl p-3 shadow-sm">
-              <div className="flex items-center gap-3 text-emerald-700">
-                <div style={{width: '16px', height: '16px'}} className="bg-emerald-100 rounded-full flex items-center justify-center">
+          )}
+          {error && (
+            <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-4 shadow-sm">
+              <div className="flex items-start gap-3 text-red-700">
+                <div style={{width: '16px', height: '16px'}} className="bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <svg style={{width: '12px', height: '12px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </div>
-                <p className={`font-semibold ${isPopupMode ? 'text-sm' : ''}`}>
-                  Found {likers.length} LinkedIn profiles
-                </p>
-              </div>
-            </div>
-
-            <LikersReviewSection likers={likers} isPopupMode={isPopupMode} />
-          </div>
-        )}
-
-        {/* Debug Logs */}
-        {debugLogs.length > 0 && !isPopupMode && (
-          <details className="bg-white/50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 shadow-sm">
-            <summary className="text-sm text-gray-600 cursor-pointer hover:text-gray-800 font-medium">
-              🔧 Debug Logs ({debugLogs.length})
-            </summary>
-            <div className="mt-3 bg-gray-900 border rounded-lg p-3 max-h-40 overflow-y-auto">
-              {debugLogs.slice(-20).map((log, index) => (
-                <div key={index} className="text-xs text-green-400 font-mono leading-relaxed">
-                  {log}
+                <div>
+                  <p className="font-semibold">Error occurred</p>
+                  <p className="text-sm mt-1">{error}</p>
                 </div>
-              ))}
-            </div>
-          </details>
-        )}
-
-        {/* Instructions */}
-        {!loading && !error && likers.length === 0 && (
-          <div className="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl shadow-sm">
-            <div className={`text-center ${isPopupMode ? 'p-4' : 'p-6'}`}>
-              <div className={`bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-3 ${isPopupMode ? 'w-8 h-8' : 'w-10 h-10'}`}>
-                <svg style={{width: isPopupMode ? '16px' : '20px', height: isPopupMode ? '16px' : '20px'}} className="text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
               </div>
-              <h3 className={`font-semibold text-gray-800 mb-2 ${isPopupMode ? 'text-base' : 'text-lg'}`}>
-                Ready to analyze LinkedIn engagement
-              </h3>
-              <p className={`text-gray-600 ${isPopupMode ? 'text-sm mb-4' : 'mb-6'}`}>
-                Navigate to any LinkedIn post and click "{isPopupMode ? 'Scan Post' : 'Scan LinkedIn Post'}" to discover who engaged with it.
-              </p>
-              
-              {!isPopupMode && (
+            </div>
+          )}
+          {/* Results */}
+          {likers.length > 0 && (
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-3 text-emerald-700">
+                  <div style={{width: '16px', height: '16px'}} className="bg-emerald-100 rounded-full flex items-center justify-center">
+                    <svg style={{width: '12px', height: '12px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <p className="font-semibold">
+                    Successfully found {likers.length} LinkedIn profiles
+                  </p>
+                </div>
+              </div>
+              <LikersReviewSection likers={likers} onOpenProfileModal={openProfileModal} />
+            </div>
+          )}
+          {/* Debug Logs */}
+          {debugLogs.length > 0 && (
+            <details className="bg-white/50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 shadow-sm">
+              <summary className="text-sm text-gray-600 cursor-pointer hover:text-gray-800 font-medium">
+                🔧 Debug Logs ({debugLogs.length})
+              </summary>
+              <div className="mt-3 bg-gray-900 border rounded-lg p-3 max-h-40 overflow-y-auto">
+                {debugLogs.slice(-20).map((log, index) => (
+                  <div key={index} className="text-xs text-green-400 font-mono leading-relaxed">
+                    {log}
+                  </div>
+                ))}
+              </div>
+            </details>
+          )}
+          {/* Instructions */}
+          {!loading && !error && likers.length === 0 && (
+            <div className="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-sm">
+              <div className="text-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg style={{width: '20px', height: '20px'}} className="text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Ready to analyze LinkedIn engagement
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Navigate to any LinkedIn post and click "Scan LinkedIn Post" to discover who engaged with it.
+                </p>
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 text-left">
                   <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                     <span style={{width: '16px', height: '16px'}} className="bg-blue-100 rounded-full flex items-center justify-center text-xs">📋</span>
@@ -339,11 +435,11 @@ const App: React.FC = () => {
                     </li>
                   </ol>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

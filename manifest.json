@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Analyzes LinkedIn profiles of post likers. Data can be manually entered or fetched from a LinkedIn post.",
   "action": {
-    "default_popup": "index.html",
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

@@ -11,64 +11,23 @@
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      /* Ensure the body doesn't exceed popup constraints */
-      overflow-x: hidden;
     }
     
-    /* Popup constraints for Chrome extension */
-    @media screen and (max-width: 900px) {
+    /* Apply popup constraints only when used as popup */
+    @media (max-width: 900px) {
       body {
-        width: 420px;
-        max-width: 420px;
+        width: 800px;
         max-height: 600px;
-        overflow-y: auto;
-        overflow-x: hidden;
+        overflow: hidden;
       }
-      
-      /* Ensure tables are responsive in popup mode */
-      .popup-responsive-table {
-        overflow-x: auto;
-        max-width: 100%;
-      }
-      
-      .popup-responsive-table table {
-        min-width: 380px;
-      }
-    }
-    
-    /* Full window mode (when opened in new tab) */
-    @media screen and (min-width: 901px) {
-      body {
-        width: 100%;
-        max-width: none;
-        max-height: none;
-      }
-    }
-    
-    /* Scrollbar styling for webkit browsers */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 3px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 3px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: #a1a1a1;
     }
   </style>
 </head>
 
 <body class="bg-slate-100">
   <div id="root"></div>
-  <script type="module" src="/index.js"></script>
+  <div id="modal-root"></div>
+  <script type="module" src="/index.js"></script> <!-- Ensure this points to index.js after Vite build -->
 </body>
 
 </html>

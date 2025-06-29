@@ -226,7 +226,9 @@ const App: React.FC = () => {
             {/* Left Panel */}
             <div className="w-[30%] bg-blue-600 text-white p-8 rounded-l-lg flex flex-col items-center justify-center text-center">
               <div className="w-28 h-28 rounded-full bg-blue-700 flex items-center justify-center mb-4">
-                <span className="text-6xl font-bold text-white">{selectedProfile.name.charAt(0)}</span>
+                <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
               </div>
               <h2 className="text-2xl font-bold leading-tight">{selectedProfile.name}</h2>
               <p className="text-sm text-blue-200 mt-1 mb-4">{selectedProfile.title || 'LinkedIn Profile'}</p>

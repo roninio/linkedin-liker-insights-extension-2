@@ -294,25 +294,111 @@ function extractNameFromProfileLink(link: Element): string {
   for (const selector of nameSelectors) {
     const nameElement = link.querySelector(selector);
     if (nameElement?.textContent?.trim()) {
-      return nameElement.textContent.trim();
+      return cleanNameText(nameElement.textContent.trim());
     }
   }
 
-  // Fallback: use aria-label or text content
+  // Fallback: use aria-label
   const ariaLabel = link.getAttribute('aria-label');
   if (ariaLabel) {
     // Extract name from aria-label patterns like "View John Doe's profile"
     const match = ariaLabel.match(/view\s+(.+?)'s\s+profile/i);
-    if (match) return match[1].trim();
+    if (match) return cleanNameText(match[1].trim());
   }
 
-  // Last resort: use any text content
+  // Last resort: use any text content but clean it up
   const textContent = link.textContent?.trim();
   if (textContent && textContent.length > 0 && textContent.length < 100) {
-    return textContent;
+    return cleanNameText(textContent);
   }
 
   return 'Unknown';
+}
+
+function cleanNameText(nameText: string): string {
+  // Debug logging to understand what we're processing
+  logToPopup(`🧹 Cleaning name text: "${nameText}"`);
+  
+  // Remove common patterns that cause duplication
+  let cleaned = nameText;
+  
+  // Handle the specific pattern: "Ben RodgersView Ben Rodgers' profile"
+  // First, try to detect if there's a "View [Name]' profile" or "View [Name]'s profile" at the end
+  const viewProfilePatterns = [
+    /view\s+(.+?)['']s?\s+profile$/gi,  // Matches both ' and ' apostrophes
+    /view\s+profile$/gi,
+    /view\s+(.+?)\s+profile$/gi
+  ];
+  
+  for (const pattern of viewProfilePatterns) {
+    cleaned = cleaned.replace(pattern, '');
+  }
+  
+  // Handle cases where the name appears twice with "View" in between
+  // Pattern: "Name1View Name2' profile" where Name1 === Name2
+  const duplicateWithViewMatch = cleaned.match(/^(.+?)view\s+(.+?)['']?s?\s*profile?.*$/i);
+  if (duplicateWithViewMatch) {
+    const firstPart = duplicateWithViewMatch[1].trim();
+    const secondPart = duplicateWithViewMatch[2].trim();
+    
+    // If the first part contains the same name as the second part, use just the first part
+    if (firstPart.toLowerCase().includes(secondPart.toLowerCase()) || 
+        secondPart.toLowerCase().includes(firstPart.toLowerCase())) {
+      cleaned = firstPart.length >= secondPart.length ? firstPart : secondPart;
+    }
+  }
+  
+  // More aggressive pattern matching for "NameView Name..." 
+  // This handles "Ben RodgersView Ben Rodgers..."
+  const nameViewNameMatch = cleaned.match(/^([A-Za-z\s]+?)view\s+([A-Za-z\s]+)/i);
+  if (nameViewNameMatch) {
+    const name1 = nameViewNameMatch[1].trim();
+    const name2 = nameViewNameMatch[2].trim();
+    
+    // If names are similar (allowing for some variation), use the cleaner one
+    if (name1.toLowerCase() === name2.toLowerCase() || 
+        name1.toLowerCase().replace(/\s+/g, '') === name2.toLowerCase().replace(/\s+/g, '')) {
+      cleaned = name1; // Use the first occurrence
+    }
+  }
+  
+  // Remove any remaining "View" text patterns
+  cleaned = cleaned.replace(/view\s+[^']*['']?s?\s*profile.*/gi, '');
+  cleaned = cleaned.replace(/view\s+profile.*/gi, '');
+  cleaned = cleaned.replace(/^view\s+/gi, '');
+  cleaned = cleaned.replace(/\s+view(\s|$)/gi, ' ');
+  
+  // Remove duplicate names (e.g., "John Doe John Doe" -> "John Doe")
+  const words = cleaned.split(/\s+/).filter(word => word.length > 0);
+  if (words.length >= 4) {
+    const midPoint = Math.floor(words.length / 2);
+    const firstHalf = words.slice(0, midPoint).join(' ');
+    const secondHalf = words.slice(midPoint).join(' ');
+    
+    // If first half equals second half, it's a duplicate
+    if (firstHalf.toLowerCase() === secondHalf.toLowerCase()) {
+      cleaned = firstHalf;
+    }
+  }
+  
+  // Clean up extra whitespace and special characters
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+  cleaned = cleaned.replace(/^[^A-Za-z]*/, '').replace(/[^A-Za-z\s]*$/, '');
+  
+  // If still too long or contains suspicious patterns, extract just the name part
+  if (cleaned.length > 50 || /view|profile/i.test(cleaned)) {
+    const nameWords = cleaned.split(/\s+/).filter(word => 
+      word.length > 1 && 
+      !/view|profile|linkedin/i.test(word)
+    );
+    if (nameWords.length >= 2) {
+      // Take first 2-3 words as the name
+      cleaned = nameWords.slice(0, Math.min(3, nameWords.length)).join(' ');
+    }
+  }
+  
+  logToPopup(`✨ Cleaned result: "${cleaned}"`);
+  return cleaned || 'Unknown';
 }
 
 function extractTitleFromProfileLink(link: Element): string | undefined {

@@ -284,18 +284,9 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <button
-                        onClick={(e) => {
-                          console.log('🖱️ Profile name clicked:', profile.name);
-                          console.log('🖱️ Click event:', e);
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleShowProfileModal(profile);
-                        }}
-                        className="font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors"
-                      >
+                      <span className="font-semibold text-gray-900">
                         {profile.name}
-                      </button>
+                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -306,17 +297,34 @@ export const LikersReviewSection: React.FC<LikersReviewSectionProps> = ({ likers
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <a
-                      href={profile.profileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
-                      <svg style={{width: '16px', height: '16px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      View Profile
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleShowProfileModal(profile);
+                        }}
+                        className="inline-flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
+                        title="View detailed information"
+                      >
+                        <svg style={{width: '14px', height: '14px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Details
+                      </button>
+                      <a
+                        href={profile.profileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
+                        title="Open LinkedIn profile"
+                      >
+                        <svg style={{width: '14px', height: '14px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        LinkedIn
+                      </a>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -107,8 +107,8 @@ async function handleProfileAnalysis(profiles: any[], sendResponse: (response?: 
     const detailedProfiles: any[] = [];
     
     // Configuration for concurrent processing
-    const CONCURRENT_LIMIT = 3; // Process 3 profiles at the same time
-    const BATCH_DELAY = 2000; // 2 second delay between batches
+    const CONCURRENT_LIMIT = 1; // Process 3 profiles at the same time
+    const BATCH_DELAY = 1200; // 2 second delay between batches
     
     // Function to analyze a single profile
     const analyzeProfile = async (profile: any, index: number): Promise<any> => {
